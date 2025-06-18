@@ -1,24 +1,31 @@
-name: CI with Debug Shell
+name: Deploy with Manual Approval
 
 on:
   push:
     branches: [ master ]
 
 jobs:
-  example:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Step 1
-        run: echo "OK" > step1.txt
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: Step 2 (fail)
-        run: |
-          echo "Failing..." > step2.txt
-          exit 1
+      - name: Build
+        run: echo "✅ Build complete"
 
-      - name: Step 3
-        run: echo "I won't be run" > step3.txt
+  wait-for-approval:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: test-required-review  # 這個名字要和你在 GitHub 設定的環境一致
+    steps:
+      - name: Wait for manual approval
+        run: echo "⏳ Waiting for approval..."
 
-      - name: Debug
-        if: failure()
-        uses: mxschmitt/action-tmate@v3
+  deploy:
+    needs: wait-for-approval
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        run: echo "🚀 Deploying to production"
