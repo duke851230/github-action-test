@@ -1,3 +1,9 @@
+name: CI with Debug Shell
+
+on:
+  push:
+    branches: [ master ]
+
 jobs:
   example:
     runs-on: ubuntu-latest
