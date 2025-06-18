@@ -1,0 +1,18 @@
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Step 1
+        run: echo "OK" > step1.txt
+
+      - name: Step 2 (fail)
+        run: |
+          echo "Failing..." > step2.txt
+          exit 1
+
+      - name: Step 3
+        run: echo "I won't be run" > step3.txt
+
+      - name: Debug
+        if: failure()
+        uses: mxschmitt/action-tmate@v3
